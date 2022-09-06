@@ -1,14 +1,15 @@
 package main
 
 import (
+	"ProjectSa-arm/Backend/entity"
 	"github.com/gin-gonic/gin"
-	"github.com/panupongKanin/sa-65-example/entity" 
 )
 
 func main() {
+	
 	entity.SetupDatabase()
- 
   	r := gin.Default()
+	r.Run()
 	
 }
 

@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"time"
+
 
 	"gorm.io/gorm"
 )
@@ -24,5 +24,5 @@ type ZONE struct {
 type BED struct{
   gorm.Model
   BED_ID          uint
-  
+  ZONE_ID         uint ``
 }
