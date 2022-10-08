@@ -19,9 +19,8 @@ func SetupDatabase() {
  
   // Migrate the schema
   database.AutoMigrate(
-    &USER{},
-    &ZONE{},
-    &BED{},
+    &user{},
+    &userType{},
     )
  
   db = database
