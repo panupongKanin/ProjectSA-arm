@@ -3,7 +3,7 @@ package entity
 import (
            "gorm.io/gorm"
            "gorm.io/driver/sqlite"
-           "time"
+          // "time"
 )
  
 var db *gorm.DB
@@ -36,8 +36,5 @@ func SetupDatabase() {
  
   db = database
 
-
-  var mapbed = Map_Bed{Triage_ID: "1", Admidtime: time.Now(),Bed_ID:"1",Map_Bed_Comment:"-",User_ID:"1"}
-  db.Create(&mapbed)
 }
 
