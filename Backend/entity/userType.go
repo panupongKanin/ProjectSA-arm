@@ -1,12 +1,11 @@
 package entity
 
 import (
-
 	"gorm.io/gorm"
 )
 
-type userType struct {
+type User_Type struct {
 	gorm.Model
-	Usertype_ID 		uint 		`gorm:"primaryKey;autoIncrement:true"`
-	Usertype 			string
+	//User_Type_ID 		uint 		`gorm:"primaryKey;autoIncrement:true"`
+	UserType	 			string
 }

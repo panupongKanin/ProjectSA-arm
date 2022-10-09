@@ -6,10 +6,11 @@ import (
 )
 
 type Bed struct {
-
 	gorm.Model
-	Bed_ID		uint		`gorm:"primaryKey;autoIncrement:true"`
+	//Bed_ID		uint		`gorm:"primaryKey;autoIncrement:true"`
 	Bed_Name		string
-	Zone_ID		Zone		`gorm:"references:Zone_ID"`
+
+	Zone_ID		string
+	Zone			Zone		`gorm:"references:id"`
 	
 }
