@@ -12,15 +12,9 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import TextField from '@mui/material/TextField';
+import { color } from "@mui/system";
 
 
-const Item = styled(Paper)(({ theme }) => ({
-      backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      ...theme.typography.body2,
-      padding: theme.spacing(1),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    }));
 
 
 
@@ -112,29 +106,35 @@ export default function SimpleContainer() {
                         
                               </Grid>
                               <Grid item xs={2} >
-                                          <Button variant="contained" sx={{marginTop : 8}}>
-                                                ค้นหา
-                                          </Button>
+                                    <Button 
+                                          fullWidth 
+                                          variant="contained" sx={{marginTop : 8
+                                    }}>
+                                          ค้นหา
+                                    </Button>
                                    
                               </Grid>
                               <Grid item xs={4}>
                                     <p>เพศ</p>
                                     <TextField
+                                          fullWidth
                                           id="outlined-read-only-input"
                                           defaultValue="Hello World"
                                           InputProps={{
                                                 readOnly: true,
                                           }}
                                     />
-                                  
+                                 
                               </Grid>
                               <Grid item xs={4}>
                                     <p>ประเภทโรค</p>
                                     <TextField
+                                          fullWidth
                                           id="outlined-read-only-input"
                                           defaultValue="Hello World"
                                           InputProps={{
                                                 readOnly: true,
+                                                
                                           }}
                                     />
                                    
@@ -142,38 +142,114 @@ export default function SimpleContainer() {
                               <Grid item xs={4}>
                                     <p>โรค</p>
                                     <TextField
+                                          fullWidth
                                           id="outlined-read-only-input"
                                           defaultValue="Hello World"
                                           InputProps={{
                                                 readOnly: true,
+                                                
                                           }}
                                     />
-                                    
+                                  
                               </Grid>
                               <Grid item xs={12}>
+                                    <p>แผนก</p>
                                     <TextField
+                                          fullWidth
                                           id="outlined-read-only-input"
                                           defaultValue="Hello World"
                                           InputProps={{
                                                 readOnly: true,
+                                             
                                           }}
                                     />
                               </Grid>
                               <Grid item xs={4}>
-                                   
+                                    <p>โซน</p>
+                                    <FormControl fullWidth>
+                                                <Select
+                                                id="demo-select-small"
+                                                value={age}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={handleChange}
+                                                >
+                                                      <MenuItem value="">
+                                                            <em>None</em>
+                                                      </MenuItem>
+                                                      {/* {users.map( item => (
+                                                            <MenuItem value={item.ID} key = {item.ID}>{item.UserType}</MenuItem>
+                                                      ))} */}
+                                                </Select>
+                                          </FormControl>
                               </Grid>
                               <Grid item xs={4}>
-                                    
+                                    <p>เตียง</p>
+                                    <FormControl fullWidth>
+                                                <Select
+                                                id="demo-select-small"
+                                                value={age}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={handleChange}
+                                                >
+                                                      <MenuItem value="">
+                                                            <em>None</em>
+                                                      </MenuItem>
+                                                      {/* {users.map( item => (
+                                                            <MenuItem value={item.ID} key = {item.ID}>{item.UserType}</MenuItem>
+                                                      ))} */}
+                                                </Select>
+                                    </FormControl>
                               </Grid>
                               <Grid item xs={4}>
-                                    
+                                    <p>วันที่เข้ารับการรักษา</p>
                               </Grid>
                               <Grid item xs={12}>
-                                   
+                                    <p>หมายเหตุ</p>
+                                    <TextField
+                                          id="outlined-multiline-static"
+                                          fullWidth
+                                          multiline
+                                          rows={4}
+                                          defaultValue=""
+                                    />
                               </Grid>
                               <Grid item xs={12}>
-                                    
+                                    <p>ผู้บันทึก</p>
+                                    <FormControl fullWidth>
+                                                <Select
+                                                id="demo-select-small"
+                                                value={age}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={handleChange}
+                                                >
+                                                      <MenuItem value="">
+                                                            <em>None</em>
+                                                      </MenuItem>
+                                                      {/* {users.map( item => (
+                                                            <MenuItem value={item.ID} key = {item.ID}>{item.UserType}</MenuItem>
+                                                      ))} */}
+                                                </Select>
+                                    </FormControl>
                               </Grid>
+                              <Grid item xs={4}>
+                              </Grid>
+                              <Grid item xs={4}>
+                                    <Button 
+                                          fullWidth
+                                          size="large"
+                                          color="success"
+                                          variant="contained" 
+                                          sx={{marginTop : 2}}
+                                    >
+                                          บันทึก
+                                    </Button>
+                              </Grid>
+                              <Grid item xs={4}>
+                              </Grid>
+                             
                         </Grid>
                   </Paper>
             </Container>
