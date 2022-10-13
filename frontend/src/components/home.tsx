@@ -11,7 +11,6 @@ import { styled } from '@mui/material/styles';
 import { useState,useEffect} from 'react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { id } from 'date-fns/locale';
-import { UsersTypeInterface } from '../models/userTypesUI';
 
 
 
@@ -21,12 +20,11 @@ import { UsersTypeInterface } from '../models/userTypesUI';
 
 export default function MyComponent() {
  
-  const [userTypes, setUserTypes] = useState<UsersTypeInterface[]>([]);
-  console.log(userTypes)
-
+  const [users, setUsers] = useState<any[]>([]);
+  console.log(users)
 
   const getUsers = async () => {
-  const apiUrl_userType = "http://localhost:8080/ListUserTypes";
+  const apiUrl = "http://localhost:8080/ListUserTypes";
   const requestOptions = {
     method: "GET",
     headers: {
@@ -35,10 +33,9 @@ export default function MyComponent() {
       },
     };
 
-    fetch(apiUrl_userType, requestOptions)
+    fetch(apiUrl, requestOptions)
       .then((response) => response.json())
-      .then((res) => setUserTypes(res));
-      
+      .then((res) => setUsers(res));
   };
 
   useEffect(() => {
@@ -47,8 +44,8 @@ export default function MyComponent() {
 
   
     return (
-      <ul>
-       
-     </ul>
+    <ul>
+     
+    </ul>
     );
 }

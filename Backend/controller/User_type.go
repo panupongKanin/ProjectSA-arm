@@ -33,7 +33,7 @@ func GetUserType(c *gin.Context) {
 		 return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": user_type})
+	c.JSON(http.StatusOK, gin.H{"data":user_type})
 }
 
 // GET /user_types
