@@ -16,6 +16,14 @@ func main() {
 	r.POST("/CreateUserType",controller.CreateUserType)
 	r.GET("/ListUserTypes",controller.ListUserTypes)
 
+	//===========Zone===========
+	r.POST("/CreateZone",controller.CreateZone)
+	r.GET("/getListZones",controller.ListZones)
+	//===========Bed===========
+	r.POST("/CreateBed",controller.CreateBed)
+	r.GET("/getListBeds",controller.ListBeds)
+	r.GET("/bed/:zoneid",controller.GetBed_by_zone)
+
 	r.Run()
 }
 

@@ -41,7 +41,7 @@ type Zone struct {
 type Bed struct {
 	gorm.Model
 
-	Bed_Name string `gorm:"uniqueIndex"`
+	Bed_Name string 
 
 	// Zone_ID   ทำหน้าที่เป็น FK
 	Zone_ID *uint
