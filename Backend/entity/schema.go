@@ -64,7 +64,7 @@ type Map_Bed struct {
 	Bed_ID 		*uint
 	Bed	  		Bed 	`gorm:"references:id" valid:"-"` 
 
-	Triage_Comment	string
+	MapBed_Comment	string
 
 	// User_ID ทำหน้าที่เป็น FK
 	User_ID 		*uint

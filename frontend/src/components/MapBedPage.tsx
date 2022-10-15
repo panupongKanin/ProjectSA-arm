@@ -45,10 +45,8 @@ export default function SimpleContainer() {
           };
 
       const [zones, setZones] = useState<ZoneInterface[]>([]);
-      
-      console.log(zoneID)
       const getZone = async () => {
-            const apiUrl = "http://localhost:8080/getListZones";
+            const apiUrl = "http://localhost:8080/GetListZones";
             const requestOptions = {
               method: "GET",
               headers: { "Content-Type": "application/json" },
@@ -65,7 +63,7 @@ export default function SimpleContainer() {
 
       const [beds, setBeds] = React.useState<BedInterface[]>([]);
       const getBed = async () => {
-            const apiUrl = `http://localhost:8080/bed/${zoneID}`;
+            const apiUrl = `http://localhost:8080/Bed/${zoneID}`;
             const requestOptions = {
               method: "GET",
               headers: { "Content-Type": "application/json" },

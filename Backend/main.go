@@ -13,18 +13,57 @@ func main() {
   	r := gin.Default()
 	r.Use(CORSMiddleware())
 
+
+
+	//=========== Main Table Mapping Bed ===========
+	r.POST("/CreateMapBed",controller.CreateMapBed)
+	r.GET("/GetListMapBeds",controller.GetListMapBeds)
+	r.GET("/GetMapBed/:id",controller.GetMapBed)
+	//=========== Main Table Mapping Bed ===========
+
+
 	r.POST("/CreateUserType",controller.CreateUserType)
 	r.GET("/ListUserTypes",controller.ListUserTypes)
 
 	//===========Zone===========
 	r.POST("/CreateZone",controller.CreateZone)
-	r.GET("/getListZones",controller.ListZones)
+	r.GET("/GetListZones",controller.ListZones)
 	//===========Bed===========
 	r.POST("/CreateBed",controller.CreateBed)
-	r.GET("/getListBeds",controller.ListBeds)
-	r.GET("/bed/:zoneid",controller.GetBed_by_zone)
+	r.GET("/GetListBeds",controller.ListBeds)
+	r.GET("/Bed/:zoneid",controller.GetBed_by_zone)
 
-	r.Run()
+	//===========gender===========
+	r.POST("/CreateGender",controller.CreateGender)
+	r.GET("/GetListGenders",controller.GetListGenders)
+	r.GET("/GetGender/:id",controller.GetGender)
+
+	//===========IPD===========
+	r.POST("/CreateIPD",controller.CreateIPD)
+	r.GET("/GetListIPDs",controller.GetListIPDs)
+	r.GET("/GetIPD/:id",controller.GetIPD)
+
+	//===========Patient===========
+	r.POST("/CreatePatient",controller.CreatePatient)
+	r.GET("/GetListPatients",controller.GetListPatients)
+	r.GET("/GetPatient/:id",controller.GetPatient)
+
+	//===========DiseaseType===========
+	r.POST("/CreateDiseaseType",controller.CreateDiseaseType)
+	r.GET("/GetListDiseaseType",controller.GetListDiseaseTypes)
+	r.GET("/GetDiseaseType/:id",controller.GetDiseaseType)
+
+	//===========Disease===========
+	r.POST("/CreateDisease",controller.CreateDisease)
+	r.GET("/GetListDisease",controller.GetListDiseases)
+	r.GET("/GetDisease/:id",controller.GetDisease)
+
+	//===========Triage===========
+	r.POST("/CreateTriage",controller.CreateTriage)
+	r.GET("/GetListTriages",controller.GetListTriages)
+	r.GET("/GetTriage/:id",controller.GetTriage)
+
+
 }
 
 
