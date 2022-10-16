@@ -68,7 +68,7 @@ func GetTriage(c *gin.Context) {
 
 // GET /GetListPatients
 func GetListTriages(c *gin.Context) {
-	var getListTriages entity.Triage
+	var getListTriages []entity.Triage
 	if err := entity.DB().Preload("Patient").Preload("Disease").Preload("Ipd").Raw("SELECT * FROM triages").Find(&getListTriages).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

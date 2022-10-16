@@ -3,17 +3,18 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { AppBar, Button, FormControl, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { TriageInterface} from '../models/userTypesUI';
+
 import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
+
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
+
 
 import TextField from '@mui/material/TextField';
-import { color } from "@mui/system";
+
 import { ZoneInterface } from "../models/zoneUI";
 import { BedInterface } from "../models/bedUI";
+
 
 
 
@@ -23,14 +24,17 @@ import { BedInterface } from "../models/bedUI";
 export default function SimpleContainer() {
       const [zoneID,setZoneID] = useState('');
       const [bedID,setBedID] = useState('');
+      const [triageID,setTriageID] = useState('');
 
 
 
-      const [users, setUsers] = useState<any[]>([]);
+      const [triages, setTriages] = useState<any[]>([]);
       const [gendersID, setGendersID] = useState<any[]>([]);
       const [genderTypes, setGenderTypes] = useState<any[]>([]);
+
+      console.log(triages)
+
      
-      console.log(gendersID)
 
       //function fethch data จาก backend Triages
       const getTriages = async () => {
@@ -42,8 +46,9 @@ export default function SimpleContainer() {
             fetch(apiUrl, requestOptions)
               .then((response) => response.json())
               .then((res) => {
-                if (res.data.Patient) {
-                  setGendersID(res.data.Patient.Gender_ID);
+                if (res.data) {
+                  //setGendersID(res.data.Patient.Gender_ID);
+                  setTriages(res.data)
                 }
               });
           };
@@ -66,7 +71,6 @@ export default function SimpleContainer() {
       
 
       const [zones, setZones] = useState<ZoneInterface[]>([]);
-      console.log(zones)
       const getZone = async () => {
             const apiUrl = "http://localhost:8080/GetListZones";
             const requestOptions = {
@@ -113,16 +117,28 @@ export default function SimpleContainer() {
       
 
 
-      const handleChange = (event: SelectChangeEvent) => {
-           
+      const onleChangeTriage = (event: SelectChangeEvent) => {
+            setTriageID(event.target.value as string)
           };
 
       const onChangeZone = (event: SelectChangeEvent) => {
             setZoneID(event.target.value as string);
           };
+
       const onChangeBed = (event: SelectChangeEvent) => {
-      setBedID(event.target.value as string);
+            setBedID(event.target.value as string);
       };
+
+      const onSubmit = (event:SelectChangeEvent )=> {
+            event.preventDefault()
+          
+            const payload = {
+              triageID,
+              bedID,
+            }
+          
+            console.log('submit value', payload)
+          }
            
       
 
@@ -167,10 +183,24 @@ export default function SimpleContainer() {
                               <Grid container spacing={2} sx ={{padding : 2}}>
                                     <Grid item xs={10}>
                                           <p>ชื่อผู้ป่วย</p>
-                                       
-     
-                                          
-                              
+                                          <FormControl fullWidth >
+                                                <Select
+                                                id="demo-select-small"
+                                                value={triageID}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={onleChangeTriage}
+                                                >
+                                                      <MenuItem value="">
+                                                            กรุณาเลือกผู้ป่วย
+                                                      </MenuItem>
+                                                      {triages.map( triage => (
+                                                            <MenuItem value={triage.ID} key = {triage.ID}>
+                                                                  {triage.Patient.Patient_Name}
+                                                            </MenuItem>
+                                                      ))}
+                                                </Select>
+                                          </FormControl>                     
                                     </Grid>
                                     <Grid item xs={2} >
                                           <Button 
@@ -234,21 +264,21 @@ export default function SimpleContainer() {
                                     <Grid item xs={4}>
                                           <p>โซน</p>
                                           <FormControl fullWidth>
-                                                      <Select
-                                                      id="demo-select-small"
-                                                      value={zoneID}
-                                                      displayEmpty
-                                                      inputProps={{ 'aria-label': 'Without label' }}
-                                                      onChange={onChangeZone}
-                                                      >
-                                                            <MenuItem value="">
-                                                                  <em>None</em>
-                                                            </MenuItem>
-                                                            {zones.map( zone => (
-                                                                  <MenuItem value={zone.ID} key = {zone.ID}>{zone.Zone_Name}</MenuItem>
-                                                            ))}
-                                                      </Select>
-                                                </FormControl>
+                                                <Select
+                                                id="demo-select-small"
+                                                value={zoneID}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={onChangeZone}
+                                                >
+                                                      <MenuItem value="">
+                                                            <em>None</em>
+                                                      </MenuItem>
+                                                      {zones.map( zone => (
+                                                            <MenuItem value={zone.ID} key = {zone.ID}>{zone.Zone_Name}</MenuItem>
+                                                      ))}
+                                                </Select>
+                                          </FormControl>
                                     </Grid>
                                     <Grid item xs={4}>
                                           <p>เตียง</p>
@@ -264,13 +294,18 @@ export default function SimpleContainer() {
                                                                   <em>None</em>
                                                             </MenuItem>
                                                             {beds.map( bed => (
-                                                                  <MenuItem value={bed.ID} key = {bed.ID}>{bed.Bed_Name}</MenuItem>
+                                                                  <MenuItem value={bed.ID} key = {bed.ID}>
+                                                                        {bed.Bed_Name}
+                                                                  </MenuItem>
                                                             ))}
                                                       </Select>
                                           </FormControl>
                                     </Grid>
                                     <Grid item xs={4}>
                                           <p>วันที่เข้ารับการรักษา</p>
+                                          <FormControl fullWidth variant="outlined">
+                                                
+                                          </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
                                           <p>หมายเหตุ</p>
@@ -290,7 +325,7 @@ export default function SimpleContainer() {
                                                       value={''}
                                                       displayEmpty
                                                       inputProps={{ 'aria-label': 'Without label' }}
-                                                      onChange={handleChange}
+                                                      onChange={onleChangeTriage}
                                                       >
                                                             <MenuItem value="">
                                                                   <em>None</em>
