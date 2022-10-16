@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { AppBar, Button, FormControl, IconButton, Paper, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { UsersTypeInterface } from '../models/userTypesUI';
+import { TriageInterface} from '../models/userTypesUI';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -22,14 +21,20 @@ import { BedInterface } from "../models/bedUI";
 
 
 export default function SimpleContainer() {
-      const [age, setAge] = React.useState('');
       const [zoneID,setZoneID] = useState('');
       const [bedID,setBedID] = useState('');
 
 
-      const [users, setUsers] = React.useState<UsersTypeInterface[]>([]);
-      const getUsers = async () => {
-            const apiUrl = "http://localhost:8080/ListUserTypes";
+
+      const [users, setUsers] = useState<any[]>([]);
+      const [gendersID, setGendersID] = useState<any[]>([]);
+      const [genderTypes, setGenderTypes] = useState<any[]>([]);
+     
+      console.log(gendersID)
+
+      //function fethch data จาก backend Triages
+      const getTriages = async () => {
+            const apiUrl = "http://localhost:8080/GetListTriages";
             const requestOptions = {
               method: "GET",
               headers: { "Content-Type": "application/json" },
@@ -37,14 +42,31 @@ export default function SimpleContainer() {
             fetch(apiUrl, requestOptions)
               .then((response) => response.json())
               .then((res) => {
-                console.log(res.data);
-                if (res.data) {
-                  setUsers(res.data);
+                if (res.data.Patient) {
+                  setGendersID(res.data.Patient.Gender_ID);
+                }
+              });
+          };
+      //function fethch data จาก backend Genders
+      const getGender = async () => {
+            const apiUrl = "http://localhost:8080/GetListTriages";
+            const requestOptions = {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            };
+            fetch(apiUrl, requestOptions)
+              .then((response) => response.json())
+              .then((res) => {
+                if (res.data.Patient) {
+                  setGendersID(res.data.Patient.Gender_ID);
                 }
               });
           };
 
+      
+
       const [zones, setZones] = useState<ZoneInterface[]>([]);
+      console.log(zones)
       const getZone = async () => {
             const apiUrl = "http://localhost:8080/GetListZones";
             const requestOptions = {
@@ -54,7 +76,6 @@ export default function SimpleContainer() {
             fetch(apiUrl, requestOptions)
                   .then((response) => response.json())
                   .then((res) => {
-                  console.log(res.data);
                         if (res.data) {
                               setZones(res.data);
                         }
@@ -71,7 +92,6 @@ export default function SimpleContainer() {
             fetch(apiUrl, requestOptions)
                   .then((response) => response.json())
                   .then((res) => {
-                  console.log(res.data);
                         if (res.data) {
                               setBeds(res.data);
                         }
@@ -80,7 +100,7 @@ export default function SimpleContainer() {
      
 
       useEffect(() => {
-            getUsers();
+            getTriages();
       }, []);
 
       useEffect(() => {
@@ -94,7 +114,7 @@ export default function SimpleContainer() {
 
 
       const handleChange = (event: SelectChangeEvent) => {
-            setAge(event.target.value as string);
+           
           };
 
       const onChangeZone = (event: SelectChangeEvent) => {
@@ -147,22 +167,9 @@ export default function SimpleContainer() {
                               <Grid container spacing={2} sx ={{padding : 2}}>
                                     <Grid item xs={10}>
                                           <p>ชื่อผู้ป่วย</p>
-                                                <FormControl fullWidth>
-                                                      <Select
-                                                      id="1"
-                                                      value={age}
-                                                      displayEmpty
-                                                      inputProps={{ 'aria-label': 'Without label' }}
-                                                      onChange={handleChange}
-                                                      >
-                                                            <MenuItem value="">
-                                                                  <em>None</em>
-                                                            </MenuItem>
-                                                            {users.map( item => (
-                                                                  <MenuItem value={item.ID} key = {item.ID}>{item.UserType}</MenuItem>
-                                                            ))}
-                                                      </Select>
-                                                </FormControl>
+                                       
+     
+                                          
                               
                                     </Grid>
                                     <Grid item xs={2} >
@@ -315,9 +322,6 @@ export default function SimpleContainer() {
                         </Paper>
                   </Container>
 
-                  <Container>
-                        
-                  </Container>
                   
 
             
@@ -327,10 +331,10 @@ export default function SimpleContainer() {
 }
 
 
-{/* <ul>
-        {users.map( item => (
-          <li key={item.ID}>
-            {item.UserType}
-          </li>
-        ))}
-       </ul> */}
+      // <ul>
+      //   {users.map( item => (
+      //     <li key={item.ID}>
+      //       {item.UserType}
+      //     </li>
+      //   ))}
+      //  </ul> 

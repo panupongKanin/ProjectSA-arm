@@ -1,20 +1,17 @@
 package main
-
+ 
 import (
-	"ProjectSa-arm/Backend/controller"
-	"ProjectSa-arm/Backend/entity"
-
-	"github.com/gin-gonic/gin"
+  "github.com/panupongKanin/ProjectSA-arm/controller"
+  "github.com/panupongKanin/ProjectSA-arm/entity"
+  "github.com/gin-gonic/gin"
 )
 
 func main() {
+  	entity.SetupDatabase()
 
-	entity.SetupDatabase()
+
   	r := gin.Default()
 	r.Use(CORSMiddleware())
-
-
-
 	//=========== Main Table Mapping Bed ===========
 	r.POST("/CreateMapBed",controller.CreateMapBed)
 	r.GET("/GetListMapBeds",controller.GetListMapBeds)
@@ -22,8 +19,8 @@ func main() {
 	//=========== Main Table Mapping Bed ===========
 
 
-	r.POST("/CreateUserType",controller.CreateUserType)
-	r.GET("/ListUserTypes",controller.ListUserTypes)
+	r.POST("/CreateUserType",controller.CreateUser)
+	r.GET("/ListUserTypes",controller.ListUsers)
 
 	//===========Zone===========
 	r.POST("/CreateZone",controller.CreateZone)
@@ -62,10 +59,17 @@ func main() {
 	r.POST("/CreateTriage",controller.CreateTriage)
 	r.GET("/GetListTriages",controller.GetListTriages)
 	r.GET("/GetTriage/:id",controller.GetTriage)
+ 
+	
+
+	//===========Test===========
+
+	r.GET("/Gettest",controller.Gettest)
 
 
+
+  	r.Run("localhost:8080")
 }
-
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {

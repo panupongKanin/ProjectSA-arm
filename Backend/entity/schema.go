@@ -10,23 +10,20 @@ import (
 type User struct {
 	gorm.Model
 
-	User_Name     string `gorm:"uniqueIndex"`
-	User_Password string
-	Name          string
+	User_Name     	string `gorm:"uniqueIndex"`
+	User_Password 	string
+	Name          	string
 
 	// User_Type_ID  ทำหน้าที่เป็น FK
-	User_Type_ID *uint
-	// เป็นข้อมูล user_type เมื่อ join ตาราง
-	User_Type User_Type `gorm:"references:id"`
+	User_Type_ID 	*uint
+	Map_Beds []Map_Bed `gorm:"ForeignKey:User_ID"`
+	
 }
 
 type User_Type struct {
 	gorm.Model
-
 	UserType string
-
-	// 1 User_Type เป็นเจ้าของได้หลาย Users
-	Users []User `gorm:"foreignKey:User_Type_ID"`
+	Users []User `gorm:"ForeignKey:User_Type_ID"`
 }
 
 type Zone struct {
@@ -35,18 +32,26 @@ type Zone struct {
 	Zone_Name string `gorm:"uniqueIndex"`
 
 	// 1 Zone เป็นเจ้าของได้หลาย Beds
-	Beds []Bed `gorm:"foreignKey:Zone_ID"`
+	
+	Beds	[]Bed	`gorm:"ForeignKey:Zone_ID"`
 }
 
 type Bed struct {
 	gorm.Model
 
 	Bed_Name string 
-
 	// Zone_ID   ทำหน้าที่เป็น FK
-	Zone_ID *uint
-	// เป็นข้อมูล Zone เมื่อ join ตาราง
-	Zone Zone `gorm:"references:id"`
+	Zone_ID      *int
+	Map_Beds []Map_Bed `gorm:"ForeignKey:Bed_ID"`
+
+}
+
+type Test struct {
+	gorm.Model
+
+	Bed_Name string 
+	Zone_Name string 
+
 }
 
 // =================================== ตารางหลัก ===================================
@@ -56,19 +61,19 @@ type Map_Bed struct {
 
 	// Triage_ID ทำหน้าที่เป็น FK
 	Triage_ID 		*uint
-	Triage   		Triage 	`gorm:"references:id" valid:"-"` 
+	
 
 	Admidtime		time.Time
 
 	// Bed_ID ทำหน้าที่เป็น FK
 	Bed_ID 		*uint
-	Bed	  		Bed 	`gorm:"references:id" valid:"-"` 
+
 
 	MapBed_Comment	string
 
 	// User_ID ทำหน้าที่เป็น FK
 	User_ID 		*uint
-	User  		User 		`gorm:"references:id" valid:"-"`
+
 }
 // =================================== ตารางหลัก ===================================
 // =================================== ตารางหลัก ===================================
@@ -82,8 +87,9 @@ type Disease struct {
 
 	// Disease_Type_ID   ทำหน้าที่เป็น FK
 	Disease_Type_ID *uint
-	// เป็นข้อมูล Zone เมื่อ join ตาราง
-	Disease_Type Disease_Type `gorm:"references:id"`
+	
+	Triages []Triage `gorm:"ForeignKey:Disease_ID"`
+
 }
 
 type Disease_Type struct {
@@ -91,13 +97,14 @@ type Disease_Type struct {
 
 	DiseaseType string
 
-	Diseases []Disease `gorm:"foreignKey:Disease_Type_ID"`
+	Diseases []Disease `gorm:"ForeignKey:Disease_Type_ID"`
 }
 
 type Ipd struct {
 	gorm.Model
-
 	IPD_Name string
+
+	Triages []Triage `gorm:"ForeignKey:IPD_ID"`
 }
 
 type Patient struct {
@@ -107,16 +114,14 @@ type Patient struct {
 
 	// Gender_ID   ทำหน้าที่เป็น FK
 	Gender_ID *uint
-	// เป็นข้อมูล Gender เมื่อ join ตาราง
-	Gender Gender `gorm:"references:id"`
+	Triages []Triage `gorm:"ForeignKey:Patient_ID"`
 }
 
 type Gender struct {
 	gorm.Model
 	//Gender_ID		uint		`gorm:"primaryKey;autoIncrement:true"`
 	Gender_Type string
-
-	Patients []Patient `gorm:"foreignKey:Gender_ID"`
+	Patients []Patient `gorm:"ForeignKey:Gender_ID"`
 }
 
 type Triage struct {
@@ -124,16 +129,23 @@ type Triage struct {
 
 	// Patient_ID ทำหน้าที่เป็น FK
 	Patient_ID *uint
-	Patient    Patient `gorm:"references:id" valid:"-"`
+	Patient    Patient `gorm:"references:id"`
+
 
 	// Disease_ID ทำหน้าที่เป็น FK
 	Disease_ID *uint
-	Disease    Disease `gorm:"references:id" valid:"-"`
+	Disease    Disease `gorm:"references:id"`
+
 
 	// IPD_ID ทำหน้าที่เป็น FK
 	IPD_ID         *uint
-	Ipd            Ipd `gorm:"references:id" valid:"-"`
+	Ipd            Ipd `gorm:"references:id"`
+
 	Triage_Comment string
+
+	Map_Beds []Map_Bed	`gorm:"ForeignKey:Triage_ID"`
+	
 }
 
 // =================================== ดึงมาจากเพื่อน ===================================
+

@@ -1,27 +1,59 @@
 package controller
 
 import (
-	"ProjectSa-arm/Backend/entity"
+	"fmt"
 	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/panupongKanin/ProjectSA-arm/entity"
 )
 
 // POST Triage
 func CreateTriage(c *gin.Context){
-
+	
+	var patient entity.Patient
+	var disease entity.Disease
+	var ipd entity.Ipd
 	var triage entity.Triage
+
+
 	if err := c.ShouldBindJSON(&triage); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := entity.DB().Create(&triage).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if  err := entity.DB().Where("id = ?", triage.Patient_ID).First(&patient); err.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "patient not found"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": triage})
-}
+	
+	if  err := entity.DB().Where("id = ?", triage.Disease_ID).First(&disease); err.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "disease not found"})
+		return
+	}
+	if  err := entity.DB().Where("id = ?", triage.IPD_ID).First(&ipd); err.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ipd not found"})
+		return
+	}
+	 
+	wv := entity.Triage{
+		Patient:patient,
+		Disease: disease,
+		Ipd:ipd,
+		Triage_Comment: triage.Triage_Comment,
+	}
 
+	fmt.Printf("%v\n", wv)
+
+	if err := entity.DB().Create(&wv).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	
+	}
+	c.JSON(http.StatusOK, gin.H{"data": wv})
+}
+	
+	
 // GET /getPatient/:id
 func GetTriage(c *gin.Context) {
 	var GetTriage entity.Patient
@@ -36,11 +68,10 @@ func GetTriage(c *gin.Context) {
 
 // GET /GetListPatients
 func GetListTriages(c *gin.Context) {
-	var getListTriages []entity.Patient
-	if err := entity.DB().Raw("SELECT * FROM triages").Scan(&getListTriages).Error; err != nil {
-		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		 return
+	var getListTriages entity.Triage
+	if err := entity.DB().Preload("Patient").Preload("Disease").Preload("Ipd").Raw("SELECT * FROM triages").Find(&getListTriages).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": getListTriages})
 }

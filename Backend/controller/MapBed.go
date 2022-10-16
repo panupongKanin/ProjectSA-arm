@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"ProjectSa-arm/Backend/entity"
+	"github.com/panupongKanin/ProjectSA-arm/entity"
 	"net/http"
 	"github.com/gin-gonic/gin"
 )
@@ -29,24 +29,24 @@ func 	CreateMapBed(c *gin.Context){
 	}
 
 	// 12: ค้นหา bed ด้วย id
-	if tx := entity.DB().Where("id = ?", map_bed.Bed).First(&bed); tx.RowsAffected == 0 {
+	if tx := entity.DB().Where("id = ?", map_bed.Bed_ID).First(&bed); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "bed not found"})
 		return
 	}
 
 	// 13: ค้นหา user ด้วย id
-	if tx := entity.DB().Where("id = ?", map_bed.User).First(&user); tx.RowsAffected == 0 {
+	if tx := entity.DB().Where("id = ?", map_bed.User_ID).First(&user); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}
 
 	// 14: สร้าง Mapbed
 	mb := entity.Map_Bed{
-		Triage:  triage,             	// โยงความสัมพันธ์กับ Entity Triage
+		Triage_ID: map_bed.Triage_ID,         	// โยงความสัมพันธ์กับ Entity Triage
 		Admidtime: map_bed.Admidtime, // ตั้งค่าฟิลด์ Admidtime
-		Bed:     bed,                 // โยงความสัมพันธ์กับ Entity Bed
+		Bed_ID:    map_bed.Bed_ID,                 // โยงความสัมพันธ์กับ Entity Bed
 		MapBed_Comment: map_bed.MapBed_Comment,
-		User:    user,               	// โยงความสัมพันธ์กับ Entity User
+		User_ID: map_bed.User_ID,               	// โยงความสัมพันธ์กับ Entity User
 	}
 
 	// 15: บันทึก

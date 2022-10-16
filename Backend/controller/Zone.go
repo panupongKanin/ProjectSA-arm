@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"ProjectSa-arm/Backend/entity"
+	"github.com/panupongKanin/ProjectSA-arm/entity"
 	"net/http"
 	"github.com/gin-gonic/gin"
 )
