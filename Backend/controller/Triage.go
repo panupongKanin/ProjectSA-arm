@@ -54,13 +54,13 @@ func CreateTriage(c *gin.Context){
 }
 	
 	
-// GET /getPatient/:id
+// GET /getTriage/:id
 func GetTriage(c *gin.Context) {
-	var GetTriage entity.Patient
+	var GetTriage entity.Triage
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM triages WHERE id = ?", id).Scan(&GetTriage).Error; err != nil {
-		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		 return
+	if tx := entity.DB().Preload("Patient.Gender").Preload("Disease.Disease_Type").Preload("Ipd").Where("id = ?", id).First(&GetTriage); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "watchvideo not found"})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": GetTriage})
@@ -69,9 +69,10 @@ func GetTriage(c *gin.Context) {
 // GET /GetListPatients
 func GetListTriages(c *gin.Context) {
 	var getListTriages []entity.Triage
-	if err := entity.DB().Preload("Patient").Preload("Disease").Preload("Ipd").Raw("SELECT * FROM triages").Find(&getListTriages).Error; err != nil {
+	if err := entity.DB().Preload("Patient.Gender").Preload("Disease.Disease_Type").Preload("Ipd").Raw("SELECT * FROM triages").Find(&getListTriages).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": getListTriages})
 }
+

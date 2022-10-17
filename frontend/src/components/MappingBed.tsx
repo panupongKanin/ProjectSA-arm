@@ -27,21 +27,37 @@ function MappingBedCreate() {
 
 //=======================================================================================================================================
 //รับค่าที่ได้จากการเลือก combobox ทั้งหมดเป็นตารางที่ ดึงไปใส่ตารางหลัก 
+
+      ///////////////////บันทึกลงตารางหลัก///////////////////
       const [triageID,setTriageID] = useState('');
       const [zoneID,setZoneID] = useState('');
       const [bedID,setBedID] = useState('');
       const [date, setDate] = useState<Date | null>(null);
-
+      const [comments,setComments] = useState('');
+     
+      // data ที่ได้มาจากการ fethch
       const [MapBeds, setMapbeds] = useState<Partial<MappingBedInterface>>({});
       const [Zones, setZones] = useState<ZoneInterface[]>([]);
       const [Beds, setBeds] = useState<BedInterface[]>([]);
-
+  
+      // data ที่ได้มาจากการ fethch ตารางเพื่อน และ search function
       const [triages, setTriages] = useState<any[]>([]); //getTriages
+      const [IPD_Name, setIPD_Name] = useState<any[]>([]);
+      const [Disease_Name, setDisease_Name] = useState<any[]>([]);
 
-      const [success, setSuccess] = React.useState(false);
-      const [error, setError] = React.useState(false);
+      /*
+            ได้ Disease_Type_ID, Gender_ID เพื่อนำไปค้นหา 
+            Disease_Type_Name       -->   ตาราง Disease_Type
+            Gender_Name             -->   ตาราง Gender_Name
+      */     
+      const [DiseaseType, setDiseaseType] = useState<any[]>([]);
+      const [GenderType, setGenderType] = useState<any[]>([]);
 
-      console.log(MapBeds)
+      // Check save
+      const [success, setSuccess] = useState(false);
+      const [error, setError] = useState(false);
+
+      console.log("");
 
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
@@ -51,6 +67,7 @@ function MappingBedCreate() {
             const id = event.target.id as keyof typeof MappingBedCreate;
             const { value } = event.target;
             setMapbeds({ ...MapBeds, [id]: value });
+            setComments(value)
       };
       
       const onChangeTriage = (event: SelectChangeEvent) => {
@@ -63,6 +80,8 @@ function MappingBedCreate() {
       const onChangeBed = (event: SelectChangeEvent) => {
             setBedID(event.target.value as string);
       };
+
+      
 
 
 //=======================================================================================================================================
@@ -79,13 +98,15 @@ function MappingBedCreate() {
             };
 
       function submit() {
+            
             let data = {
             Triage_ID: triageID,
             Bed_ID: bedID,
             Admidtime: date,
-            MapBed_Comment: MapBeds.MapBed_Comment ?? "",
+            MapBed_Comment: comments,
             //User_ID:
             };
+
             console.log(data);
 
             const apiUrl = "http://localhost:8080/CreateMapBed";
@@ -103,8 +124,40 @@ function MappingBedCreate() {
                                     setError(true);
                               }
                         });
+            // reset All after Submit
+            setTriageID("");
+            setBedID("");
+            setDate(null);
+            setZoneID("");
+            setDisease_Name([]);
+            setDiseaseType([])
+            setIPD_Name([]);
+            setGenderType([]);
+            setComments("")
+            
+      }
+//=======================================================================================================================================
+//function Search
+      function search() { 
+            const apiUrl1 = `http://localhost:8080/GetTriage/${triageID}`;
+            const requestOptions1 = {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            };
+            fetch(apiUrl1, requestOptions1)
+                  .then((response) => response.json())
+                  .then((res) => {
+                        if (res.data) {
+                              //console.log(res.data);
+                              setIPD_Name(res.data.Ipd.IPD_Name);
+                              setDisease_Name(res.data.Disease.Disease_Name)
+                              setDiseaseType(res.data.Disease.Disease_Type.DiseaseType)
+                              setGenderType(res.data.Patient.Gender.Gender_Type)
+                        }
+                  });
       }
       
+     
 //=======================================================================================================================================
 //function fethch data จาก backend
       const getTriages = async () => {
@@ -154,7 +207,6 @@ function MappingBedCreate() {
       };
 
       //========function useEffect ========
-
       useEffect(() => {
             getTriages();
             getZone();
@@ -223,7 +275,7 @@ function MappingBedCreate() {
                                           <p>ชื่อผู้ป่วย</p>
                                           <FormControl fullWidth >
                                                 <Select
-                                                id="demo-select-small"
+                                                id="Patient_Name"
                                                 value={triageID}
                                                 displayEmpty
                                                 inputProps={{ 'aria-label': 'Without label' }}
@@ -242,10 +294,13 @@ function MappingBedCreate() {
                                                             
                                     </Grid>
                                     <Grid item xs={2} >
-                                          <Button 
-                                                fullWidth 
-                                                variant="contained" sx={{marginTop : 8
-                                          }}>
+                                          
+                                          <Button
+                                                onClick={search}
+                                                variant="contained"
+                                                color="primary"
+                                                sx={{marginTop : 8}}
+                                          >
                                                 ค้นหา
                                           </Button>
                                     
@@ -254,8 +309,8 @@ function MappingBedCreate() {
                                           <p>เพศ</p>
                                           <TextField
                                                 fullWidth
-                                                id="outlined-read-only-input"
-                                                defaultValue="Hello World"
+                                                id="GenderType"
+                                                value={GenderType}
                                                 InputProps={{
                                                       readOnly: true,
                                                 }}
@@ -267,7 +322,7 @@ function MappingBedCreate() {
                                           <TextField
                                                 fullWidth
                                                 id="outlined-read-only-input"
-                                                defaultValue="Hello World"
+                                                value={DiseaseType}
                                                 InputProps={{
                                                       readOnly: true,
                                                       
@@ -280,7 +335,7 @@ function MappingBedCreate() {
                                           <TextField
                                                 fullWidth
                                                 id="outlined-read-only-input"
-                                                defaultValue="Hello World"
+                                                value={Disease_Name}
                                                 InputProps={{
                                                       readOnly: true,
                                                       
@@ -293,7 +348,7 @@ function MappingBedCreate() {
                                           <TextField
                                                 fullWidth
                                                 id="outlined-read-only-input"
-                                                defaultValue="Hello World"
+                                                value={IPD_Name}
                                                 InputProps={{
                                                       readOnly: true,
                                                 
@@ -311,7 +366,7 @@ function MappingBedCreate() {
                                                 onChange={onChangeZone}
                                                 >
                                                       <MenuItem value="">
-                                                            กรุณาเลือกโซนของเตียง
+                                                            กรุณาเลือกโซน
                                                       </MenuItem>
                                                       {Zones.map( zone => (
                                                             <MenuItem value={zone.ID} key = {zone.ID}>{zone.Zone_Name}</MenuItem>
@@ -330,7 +385,7 @@ function MappingBedCreate() {
                                                       onChange={onChangeBed}
                                                       >
                                                             <MenuItem value="">
-                                                                  <em>None</em>
+                                                                  กรุณาเลือกเตียง
                                                             </MenuItem>
                                                             {Beds.map( bed => (
                                                                   <MenuItem value={bed.ID} key = {bed.ID}>
@@ -364,7 +419,8 @@ function MappingBedCreate() {
                                                 variant="outlined"
                                                 type="string"
                                                 size="medium"
-                                                value={MapBeds.MapBed_Comment || ""}
+                                                value={comments}
+                                                defaultValue=""
                                                 onChange={handleInputChange}
                                                 />
                                           </FormControl>
@@ -372,12 +428,27 @@ function MappingBedCreate() {
                                     </Grid>
                                     <Grid item xs={12}>
                                           <p>ผู้บันทึก</p>
+                                          <FormControl fullWidth>
+                                                <Select
+                                                id="demo-select-small"
+                                                value={zoneID}
+                                                displayEmpty
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                                onChange={onChangeZone}
+                                                >
+                                                      <MenuItem value="">
+                                                            -
+                                                      </MenuItem>
+                                                      
+                                                </Select>
+                                          </FormControl>
+                                         
                                     </Grid>
                                     <Grid item xs={4}>
                                     </Grid>
                                     <Grid item xs={4}>
                                           <Button
-                                                style={{ float: "right" }}
+                                                fullWidth
                                                 onClick={submit}
                                                 variant="contained"
                                                 color="primary"

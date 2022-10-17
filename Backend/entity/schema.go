@@ -86,9 +86,10 @@ type Disease struct {
 	Disease_Name string
 
 	// Disease_Type_ID   ทำหน้าที่เป็น FK
-	Disease_Type_ID *uint
-	
-	Triages []Triage `gorm:"ForeignKey:Disease_ID"`
+	Disease_Type_ID 	*uint
+	Disease_Type    	Disease_Type	`gorm:"references:id"`
+
+	Triages 		[]Triage 		`gorm:"ForeignKey:Disease_ID"`
 
 }
 
@@ -113,8 +114,9 @@ type Patient struct {
 	Patient_Name string
 
 	// Gender_ID   ทำหน้าที่เป็น FK
-	Gender_ID *uint
-	Triages []Triage `gorm:"ForeignKey:Patient_ID"`
+	Gender_ID 	*uint
+	Gender    	Gender 	`gorm:"references:id"`
+	Triages 	[]Triage 	`gorm:"ForeignKey:Patient_ID"`
 }
 
 type Gender struct {
@@ -142,6 +144,8 @@ type Triage struct {
 	Ipd            Ipd `gorm:"references:id"`
 
 	Triage_Comment string
+
+	
 
 	Map_Beds []Map_Bed	`gorm:"ForeignKey:Triage_ID"`
 	

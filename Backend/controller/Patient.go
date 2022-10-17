@@ -37,7 +37,7 @@ func GetPatient(c *gin.Context) {
 // GET /GetListPatients
 func GetListPatients(c *gin.Context) {
 	var getPatients []entity.Patient
-	if err := entity.DB().Raw("SELECT * FROM patients").Scan(&getPatients).Error; err != nil {
+	if err := entity.DB().Preload("Gender").Raw("SELECT * FROM patients").Find(&getPatients).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
