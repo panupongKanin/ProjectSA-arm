@@ -1,81 +1,133 @@
-import React, { useEffect, useState } from "react";
+import * as React from 'react';
+import { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import { AppBar, Button, FormControl, IconButton, Paper, Toolbar, Typography } from '@mui/material';
+import {AppBar, Button, FormControl, IconButton, Paper, Snackbar, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
 import MenuItem from '@mui/material/MenuItem';
-
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
-
-
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import TextField from '@mui/material/TextField';
+import { ZoneInterface,BedInterface ,MappingBedInterface} from "../models/UserInterface";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-import { ZoneInterface } from "../models/zoneUI";
-import { BedInterface } from "../models/bedUI";
-
-
-
-
-
-
-
-export default function SimpleContainer() {
-      const [zoneID,setZoneID] = useState('');
-      const [bedID,setBedID] = useState('');
-      const [triageID,setTriageID] = useState('');
-
-
-
-      const [triages, setTriages] = useState<any[]>([]);
-      const [gendersID, setGendersID] = useState<any[]>([]);
-      const [genderTypes, setGenderTypes] = useState<any[]>([]);
-
-      console.log(triages)
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+      props,
+      ref
+     ) {
+      return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+     });
 
      
+function MappingBedCreate() {
 
-      //function fethch data จาก backend Triages
+
+//=======================================================================================================================================
+//รับค่าที่ได้จากการเลือก combobox ทั้งหมดเป็นตารางที่ ดึงไปใส่ตารางหลัก 
+      const [triageID,setTriageID] = useState('');
+      const [zoneID,setZoneID] = useState('');
+      const [bedID,setBedID] = useState('');
+      const [date, setDate] = useState<Date | null>(null);
+
+      const [MapBeds, setMapbeds] = useState<Partial<MappingBedInterface>>({});
+      const [Zones, setZones] = useState<ZoneInterface[]>([]);
+      const [Beds, setBeds] = useState<BedInterface[]>([]);
+
+      const [triages, setTriages] = useState<any[]>([]); //getTriages
+
+      const [success, setSuccess] = React.useState(false);
+      const [error, setError] = React.useState(false);
+
+      console.log(MapBeds)
+
+//=======================================================================================================================================
+//สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
+      const handleInputChange = (
+            event: React.ChangeEvent<{ id?: string; value: any }>
+      ) => {
+            const id = event.target.id as keyof typeof MappingBedCreate;
+            const { value } = event.target;
+            setMapbeds({ ...MapBeds, [id]: value });
+      };
+      
+      const onChangeTriage = (event: SelectChangeEvent) => {
+            setTriageID(event.target.value as string);
+      };
+      const onChangeZone = (event: SelectChangeEvent) => {
+            setZoneID(event.target.value as string);
+      };
+
+      const onChangeBed = (event: SelectChangeEvent) => {
+            setBedID(event.target.value as string);
+      };
+
+
+//=======================================================================================================================================
+//function Submit
+      const handleClose = (
+            event?: React.SyntheticEvent | Event,
+            reason?: string
+      ) => {
+            if (reason === "clickaway") {
+            return;
+            }
+            setSuccess(false);
+            setError(false);
+            };
+
+      function submit() {
+            let data = {
+            Triage_ID: triageID,
+            Bed_ID: bedID,
+            Admidtime: date,
+            MapBed_Comment: MapBeds.MapBed_Comment ?? "",
+            //User_ID:
+            };
+            console.log(data);
+
+            const apiUrl = "http://localhost:8080/CreateMapBed";
+            const requestOptions = {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                  };
+                  fetch(apiUrl, requestOptions)
+                        .then((response) => response.json())
+                        .then((res) => {
+                              if (res.data) {
+                                    setSuccess(true);
+                              } else {
+                                    setError(true);
+                              }
+                        });
+      }
+      
+//=======================================================================================================================================
+//function fethch data จาก backend
       const getTriages = async () => {
             const apiUrl = "http://localhost:8080/GetListTriages";
             const requestOptions = {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
             };
             fetch(apiUrl, requestOptions)
-              .then((response) => response.json())
-              .then((res) => {
-                if (res.data) {
-                  //setGendersID(res.data.Patient.Gender_ID);
-                  setTriages(res.data)
-                }
-              });
-          };
-      //function fethch data จาก backend Genders
-      const getGender = async () => {
-            const apiUrl = "http://localhost:8080/GetListTriages";
-            const requestOptions = {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
-            };
-            fetch(apiUrl, requestOptions)
-              .then((response) => response.json())
-              .then((res) => {
-                if (res.data.Patient) {
-                  setGendersID(res.data.Patient.Gender_ID);
-                }
-              });
-          };
+                  .then((response) => response.json())
+                  .then((res) => {
+                        if (res.data) {
+                              //setGendersID(res.data.Patient.Gender_ID);
+                              setTriages(res.data)
+                        }
+                  });
+      };
 
-      
-
-      const [zones, setZones] = useState<ZoneInterface[]>([]);
       const getZone = async () => {
             const apiUrl = "http://localhost:8080/GetListZones";
             const requestOptions = {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
             };
             fetch(apiUrl, requestOptions)
                   .then((response) => response.json())
@@ -86,12 +138,11 @@ export default function SimpleContainer() {
                   });
       };
 
-      const [beds, setBeds] = React.useState<BedInterface[]>([]);
       const getBed = async () => {
             const apiUrl = `http://localhost:8080/Bed/${zoneID}`;
             const requestOptions = {
-              method: "GET",
-              headers: { "Content-Type": "application/json" },
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
             };
             fetch(apiUrl, requestOptions)
                   .then((response) => response.json())
@@ -101,49 +152,36 @@ export default function SimpleContainer() {
                         }
                   });
       };
-     
+
+      //========function useEffect ========
 
       useEffect(() => {
             getTriages();
-      }, []);
-
-      useEffect(() => {
             getZone();
-      }, []);
-     
-      useEffect(() => {
             getBed();
       }, [zoneID]);
-      
 
+//=======================================================================================================================================
+//Uer inter face
+//=======================================================================================================================================
 
-      const onleChangeTriage = (event: SelectChangeEvent) => {
-            setTriageID(event.target.value as string)
-          };
-
-      const onChangeZone = (event: SelectChangeEvent) => {
-            setZoneID(event.target.value as string);
-          };
-
-      const onChangeBed = (event: SelectChangeEvent) => {
-            setBedID(event.target.value as string);
-      };
-
-      const onSubmit = (event:SelectChangeEvent )=> {
-            event.preventDefault()
-          
-            const payload = {
-              triageID,
-              bedID,
-            }
-          
-            console.log('submit value', payload)
-          }
-           
-      
-
-      return (
+      return(
             <Paper elevation={0}>
+                  <Snackbar
+                        open={success}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  >
+                        <Alert onClose={handleClose} severity="success">
+                              บันทึกข้อมูลสำเร็จ
+                        </Alert>
+                  </Snackbar>
+                  <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert onClose={handleClose} severity="error">
+                              บันทึกข้อมูลไม่สำเร็จ
+                        </Alert>
+                  </Snackbar>
                   <Box>
                         <AppBar position="static">
                               <Toolbar>
@@ -189,7 +227,7 @@ export default function SimpleContainer() {
                                                 value={triageID}
                                                 displayEmpty
                                                 inputProps={{ 'aria-label': 'Without label' }}
-                                                onChange={onleChangeTriage}
+                                                onChange={onChangeTriage}
                                                 >
                                                       <MenuItem value="">
                                                             กรุณาเลือกผู้ป่วย
@@ -200,7 +238,8 @@ export default function SimpleContainer() {
                                                             </MenuItem>
                                                       ))}
                                                 </Select>
-                                          </FormControl>                     
+                                          </FormControl>  
+                                                            
                                     </Grid>
                                     <Grid item xs={2} >
                                           <Button 
@@ -272,9 +311,9 @@ export default function SimpleContainer() {
                                                 onChange={onChangeZone}
                                                 >
                                                       <MenuItem value="">
-                                                            <em>None</em>
+                                                            กรุณาเลือกโซนของเตียง
                                                       </MenuItem>
-                                                      {zones.map( zone => (
+                                                      {Zones.map( zone => (
                                                             <MenuItem value={zone.ID} key = {zone.ID}>{zone.Zone_Name}</MenuItem>
                                                       ))}
                                                 </Select>
@@ -284,7 +323,7 @@ export default function SimpleContainer() {
                                           <p>เตียง</p>
                                           <FormControl fullWidth>
                                                       <Select
-                                                      id="demo-select-small"
+                                                      id="beds"
                                                       value={bedID}
                                                       displayEmpty
                                                       inputProps={{ 'aria-label': 'Without label' }}
@@ -293,61 +332,57 @@ export default function SimpleContainer() {
                                                             <MenuItem value="">
                                                                   <em>None</em>
                                                             </MenuItem>
-                                                            {beds.map( bed => (
+                                                            {Beds.map( bed => (
                                                                   <MenuItem value={bed.ID} key = {bed.ID}>
                                                                         {bed.Bed_Name}
                                                                   </MenuItem>
                                                             ))}
                                                       </Select>
                                           </FormControl>
+                                          
                                     </Grid>
                                     <Grid item xs={4}>
                                           <p>วันที่เข้ารับการรักษา</p>
+                                          <FormControl fullWidth variant="outlined">
+                                          <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                                <DatePicker
+                                                      value={date}
+                                                      onChange={(newValue) => {setDate(newValue);}}
+                                                      renderInput={(params) => <TextField {...params} />}
+                                                />
+                                                </LocalizationProvider>
+                                          </FormControl>
                                           <FormControl fullWidth variant="outlined">
                                                 
                                           </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
                                           <p>หมายเหตุ</p>
-                                          <TextField
-                                                id="outlined-multiline-static"
-                                                fullWidth
-                                                multiline
-                                                rows={4}
-                                                defaultValue=""
-                                          />
+                                          <FormControl fullWidth variant="outlined">
+                                                <TextField
+                                                id="MapBed_Comment"
+                                                variant="outlined"
+                                                type="string"
+                                                size="medium"
+                                                value={MapBeds.MapBed_Comment || ""}
+                                                onChange={handleInputChange}
+                                                />
+                                          </FormControl>
+
                                     </Grid>
                                     <Grid item xs={12}>
                                           <p>ผู้บันทึก</p>
-                                          <FormControl fullWidth>
-                                                      <Select
-                                                      id="demo-select-small"
-                                                      value={''}
-                                                      displayEmpty
-                                                      inputProps={{ 'aria-label': 'Without label' }}
-                                                      onChange={onleChangeTriage}
-                                                      >
-                                                            <MenuItem value="">
-                                                                  <em>None</em>
-                                                            </MenuItem>
-                                                            {zones.map( zone => (
-                                                                  <MenuItem value={zone.ID} key = {zone.ID}>{zone.Zone_Name}</MenuItem>
-                                                            ))}
-                                                          
-                                                      </Select>
-                                          </FormControl>
                                     </Grid>
                                     <Grid item xs={4}>
                                     </Grid>
                                     <Grid item xs={4}>
-                                          <Button 
-                                                fullWidth
-                                                size="large"
-                                                color="success"
-                                                variant="contained" 
-                                                sx={{marginTop : 2}}
+                                          <Button
+                                                style={{ float: "right" }}
+                                                onClick={submit}
+                                                variant="contained"
+                                                color="primary"
                                           >
-                                                บันทึก
+                                                Submit
                                           </Button>
                                     </Grid>
                                     <Grid item xs={4}>
@@ -356,20 +391,7 @@ export default function SimpleContainer() {
                               </Grid>
                         </Paper>
                   </Container>
-
-                  
-
-            
             </Paper>
-
-  );
+      );
 }
-
-
-      // <ul>
-      //   {users.map( item => (
-      //     <li key={item.ID}>
-      //       {item.UserType}
-      //     </li>
-      //   ))}
-      //  </ul> 
+export default MappingBedCreate;

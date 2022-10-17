@@ -64,7 +64,7 @@ func main() {
 
 	//===========Test===========
 
-	r.GET("/Gettest",controller.Gettest)
+
 
 
 

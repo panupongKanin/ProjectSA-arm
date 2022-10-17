@@ -12,7 +12,7 @@ func 	CreateMapBed(c *gin.Context){
 
 	var triage entity.Triage
 	var bed entity.Bed
-	var user entity.User
+	//var user entity.User
 
 	var map_bed entity.Map_Bed
 
@@ -35,10 +35,10 @@ func 	CreateMapBed(c *gin.Context){
 	}
 
 	// 13: ค้นหา user ด้วย id
-	if tx := entity.DB().Where("id = ?", map_bed.User_ID).First(&user); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
-		return
-	}
+	// if tx := entity.DB().Where("id = ?", map_bed.User_ID).First(&user); tx.RowsAffected == 0 {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+	// 	return
+	// }
 
 	// 14: สร้าง Mapbed
 	mb := entity.Map_Bed{
@@ -66,7 +66,6 @@ func GetMapBed(c *gin.Context) {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": GetMapBed})
 }
 
