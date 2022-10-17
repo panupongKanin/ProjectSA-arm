@@ -13,3 +13,4 @@
 # 🐶 Requirement
 ## ตารางเพื่อนที่ใช้ดึงข้อมูล
 ### 🔸🔹 Patient 🔸🔹
+[![2565-10-17-20-00-17.png](https://i.postimg.cc/c4tjfYcV/2565-10-17-20-00-17.png)](https://postimg.cc/MvxdSnND)
