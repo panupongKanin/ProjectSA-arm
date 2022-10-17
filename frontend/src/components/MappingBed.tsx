@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import {AppBar, Button, FormControl, IconButton, Paper, Snackbar, Toolbar, Typography } from '@mui/material';
+import {AppBar, Button, FormControl, IconButton, Paper, Snackbar,Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -13,6 +13,7 @@ import { ZoneInterface,BedInterface ,MappingBedInterface} from "../models/UserIn
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
       props,
@@ -27,6 +28,7 @@ function MappingBedCreate() {
 
 //=======================================================================================================================================
 //รับค่าที่ได้จากการเลือก combobox ทั้งหมดเป็นตารางที่ ดึงไปใส่ตารางหลัก 
+
 
       ///////////////////บันทึกลงตารางหลัก///////////////////
       const [triageID,setTriageID] = useState('');
@@ -46,7 +48,7 @@ function MappingBedCreate() {
       const [Disease_Name, setDisease_Name] = useState<any[]>([]);
 
       /*
-            ได้ Disease_Type_ID, Gender_ID เพื่อนำไปค้นหา 
+            ได้ 
             Disease_Type_Name       -->   ตาราง Disease_Type
             Gender_Name             -->   ตาราง Gender_Name
       */     
@@ -56,8 +58,7 @@ function MappingBedCreate() {
       // Check save
       const [success, setSuccess] = useState(false);
       const [error, setError] = useState(false);
-
-      console.log("");
+      
 
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
@@ -67,7 +68,7 @@ function MappingBedCreate() {
             const id = event.target.id as keyof typeof MappingBedCreate;
             const { value } = event.target;
             setMapbeds({ ...MapBeds, [id]: value });
-            setComments(value)
+            setComments(value);
       };
       
       const onChangeTriage = (event: SelectChangeEvent) => {
@@ -136,6 +137,7 @@ function MappingBedCreate() {
             setComments("")
             
       }
+      
 //=======================================================================================================================================
 //function Search
       function search() { 
@@ -160,6 +162,21 @@ function MappingBedCreate() {
      
 //=======================================================================================================================================
 //function fethch data จาก backend
+      const getMappigBed = async () => {
+            const apiUrl = "http://localhost:8080/GetListMapBeds";
+            const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            };
+            fetch(apiUrl, requestOptions)
+                  .then((response) => response.json())
+                  .then((res) => {
+                        if (res.data) {
+                              
+                        }
+                  });
+      };
+
       const getTriages = async () => {
             const apiUrl = "http://localhost:8080/GetListTriages";
             const requestOptions = {
@@ -211,12 +228,13 @@ function MappingBedCreate() {
             getTriages();
             getZone();
             getBed();
+            getMappigBed();
       }, [zoneID]);
 
 //=======================================================================================================================================
 //Uer inter face
 //=======================================================================================================================================
-
+      
       return(
             <Paper elevation={0}>
                   <Snackbar
@@ -458,7 +476,10 @@ function MappingBedCreate() {
                                     </Grid>
                                     <Grid item xs={4}>
                                     </Grid>
-                              
+                                    <Grid item xs={12}>
+                                   
+                                    </Grid>
+                             
                               </Grid>
                         </Paper>
                   </Container>

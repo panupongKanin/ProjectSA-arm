@@ -62,7 +62,7 @@ func 	CreateMapBed(c *gin.Context){
 func GetMapBed(c *gin.Context) {
 	var GetMapBed entity.Map_Bed
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM map_beds WHERE id = ?", id).Scan(&GetMapBed).Error; err != nil {
+	if err := entity.DB().Preload("Bed.Zone").Preload("Triage.Patient.Gender").Preload("Triage.Disease.Disease_Type").Preload("Triage.Ipd").Preload("User.User_Type").Raw("SELECT * FROM map_beds WHERE id = ?", id).Scan(&GetMapBed).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
@@ -72,11 +72,10 @@ func GetMapBed(c *gin.Context) {
 // GET /mapbeds
 func GetListMapBeds(c *gin.Context) {
 	var GetMapBeds []entity.Map_Bed
-	if err := entity.DB().Raw("SELECT * FROM map_beds").Scan(&GetMapBeds).Error; err != nil {
+	if err := entity.DB().Preload("Bed.Zone").Preload("Triage.Patient.Gender").Preload("Triage.Disease.Disease_Type").Preload("Triage.Ipd").Preload("User.User_Type").Raw("SELECT * FROM map_beds").Find(&GetMapBeds).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": GetMapBeds})
 }
 

@@ -47,7 +47,7 @@ func GetBed_by_zone(c *gin.Context) {
 // GET /beds
 func ListBeds(c *gin.Context) {
 	var beds []entity.Bed
-	if err := entity.DB().Raw("SELECT * FROM beds").Scan(&beds).Error; err != nil {
+	if err := entity.DB().Preload("Zone").Raw("SELECT * FROM beds").Find(&beds).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}

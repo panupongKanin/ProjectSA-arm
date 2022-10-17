@@ -3,7 +3,6 @@ package entity
 import (
 	// "time"
 	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -16,7 +15,9 @@ type User struct {
 
 	// User_Type_ID  ทำหน้าที่เป็น FK
 	User_Type_ID 	*uint
-	Map_Beds []Map_Bed `gorm:"ForeignKey:User_ID"`
+	User_Type    	User_Type `gorm:"references:id"`
+	
+	Map_Beds 		[]Map_Bed `gorm:"ForeignKey:User_ID"`
 	
 }
 
@@ -41,8 +42,10 @@ type Bed struct {
 
 	Bed_Name string 
 	// Zone_ID   ทำหน้าที่เป็น FK
-	Zone_ID      *int
-	Map_Beds []Map_Bed `gorm:"ForeignKey:Bed_ID"`
+	Zone_ID      	*int
+	Zone    		Zone 		`gorm:"references:id"`
+
+	Map_Beds 		[]Map_Bed 	`gorm:"ForeignKey:Bed_ID"`
 
 }
 
@@ -61,18 +64,20 @@ type Map_Bed struct {
 
 	// Triage_ID ทำหน้าที่เป็น FK
 	Triage_ID 		*uint
+	Triage   	 	Triage 	`gorm:"references:id"`
 	
 
 	Admidtime		time.Time
 
 	// Bed_ID ทำหน้าที่เป็น FK
 	Bed_ID 		*uint
-
+	Bed    		Bed		 `gorm:"references:id"`
 
 	MapBed_Comment	string
 
 	// User_ID ทำหน้าที่เป็น FK
 	User_ID 		*uint
+	User    		User 		`gorm:"references:id"`
 
 }
 // =================================== ตารางหลัก ===================================
