@@ -6,8 +6,6 @@ import (
 
 
 	"time"
-
-
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -29,7 +27,7 @@ func (l SqlLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql st
 }
  
 func SetupDatabase() {
-  database, err := gorm.Open(sqlite.Open("Map_Bed.db"), &gorm.Config{
+  database, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
     Logger: SqlLogger{},
   })
   if err != nil {
@@ -38,15 +36,15 @@ func SetupDatabase() {
  
   // Migrate the schema
   database.AutoMigrate(
-    &Zone{},
-    &Bed{},
+
+    //&Bed{},
 
     &User{},
     &User_Type{},
     &Zone{},
-    &Bed{},
     &Map_Bed{},
 
+    
     &Triage{},
     &Patient{},
     &Gender{},

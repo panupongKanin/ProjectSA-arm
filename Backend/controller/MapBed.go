@@ -1,9 +1,15 @@
 package controller
 
 import (
-	"github.com/panupongKanin/ProjectSA-arm/entity"
+	//"fmt"
+	"fmt"
 	"net/http"
+	//"strings"
+
+	"strings"
+
 	"github.com/gin-gonic/gin"
+	"github.com/panupongKanin/ProjectSA-arm/entity"
 )
 
 // POST Map_Bed
@@ -69,7 +75,24 @@ func GetMapBed(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": GetMapBed})
 }
 
+
+func GetMapBedTriageID(c *gin.Context) {
+	var GetMapBedTriageID []entity.Triage
+	id := c.Param("id")
+	Var:= strings.Split(id,"")
+	str3 := strings.Join(Var, "()")
+	if err := entity.DB().Where("id IN ?", []string{str3}).Find(&GetMapBedTriageID).Error; err != nil {
+		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		 return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": GetMapBedTriageID})
+	fmt.Printf("%v\n", []string{str3})
+	
+}
+
+
 // GET /mapbeds
+// return ไปให้เพื่อน
 func GetListMapBeds(c *gin.Context) {
 	var GetMapBeds []entity.Map_Bed
 	if err := entity.DB().Preload("Bed.Zone").Preload("Triage.Patient.Gender").Preload("Triage.Disease.Disease_Type").Preload("Triage.Ipd").Preload("User.User_Type").Raw("SELECT * FROM map_beds").Find(&GetMapBeds).Error; err != nil {
@@ -80,3 +103,4 @@ func GetListMapBeds(c *gin.Context) {
 }
 
 
+//GetMapBedTriageID

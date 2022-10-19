@@ -44,8 +44,11 @@ type Bed struct {
 	// Zone_ID   ทำหน้าที่เป็น FK
 	Zone_ID      	*int
 	Zone    		Zone 		`gorm:"references:id"`
+	bed_Statetus	int		
 
 	Map_Beds 		[]Map_Bed 	`gorm:"ForeignKey:Bed_ID"`
+
+	
 
 }
 
@@ -138,7 +141,6 @@ type Triage struct {
 	Patient_ID *uint
 	Patient    Patient `gorm:"references:id"`
 
-
 	// Disease_ID ทำหน้าที่เป็น FK
 	Disease_ID *uint
 	Disease    Disease `gorm:"references:id"`
@@ -155,6 +157,9 @@ type Triage struct {
 	Map_Beds []Map_Bed	`gorm:"ForeignKey:Triage_ID"`
 	
 }
+
+
+
 
 // =================================== ดึงมาจากเพื่อน ===================================
 

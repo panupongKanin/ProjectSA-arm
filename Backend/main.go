@@ -16,6 +16,7 @@ func main() {
 	r.POST("/CreateMapBed",controller.CreateMapBed)
 	r.GET("/GetListMapBeds",controller.GetListMapBeds)
 	r.GET("/GetMapBed/:id",controller.GetMapBed)
+	r.GET("/GetMapBedTriageID/:id",controller.GetMapBedTriageID)
 	//=========== Main Table Mapping Bed ===========
 
 
@@ -63,9 +64,6 @@ func main() {
 	
 
 	//===========Test===========
-
-
-
 
 
   	r.Run("localhost:8080")

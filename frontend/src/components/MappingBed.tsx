@@ -58,6 +58,39 @@ function MappingBedCreate() {
       // Check save
       const [success, setSuccess] = useState(false);
       const [error, setError] = useState(false);
+
+      const [filtertriages, setFiltertriages] = useState<any[]>([]);
+      
+      const triage_id = filtertriages.map((id)=>{
+            //console.log(id.Triage_ID);
+            return id.Triage_ID;
+      });
+
+      //console.log(triages);
+      const [test,settest] = useState([]);
+     
+      // Object.assign({},triage_id)
+      console.log(Object.assign({},triage_id));
+
+      for (let i of triage_id) {
+            //console.log(i.ID);
+            // var result = triage_id.filter(number => number != i.ID);
+            // console.log(result);
+            var result = triages.filter(id => id.ID == i);
+
+            
+
+            //settest(result)
+
+      }
+
+      
+      
+     
+      
+      
+      
+      
       
 
 //=======================================================================================================================================
@@ -172,6 +205,7 @@ function MappingBedCreate() {
                   .then((response) => response.json())
                   .then((res) => {
                         if (res.data) {
+                              setFiltertriages(res.data)
                               
                         }
                   });
