@@ -27,7 +27,6 @@ function MappingBedCreate() {
 //=======================================================================================================================================
 //รับค่าที่ได้จากการเลือก combobox ทั้งหมดเป็นตารางที่ ดึงไปใส่ตารางหลัก 
 
-
       ///////////////////บันทึกลงตารางหลัก///////////////////
       const [triageID,setTriageID] = useState('');
       const [zoneID,setZoneID] = useState('');
@@ -41,7 +40,7 @@ function MappingBedCreate() {
       const [Beds, setBeds] = useState<BedInterface[]>([]);
   
       // data ที่ได้มาจากการ fethch ตารางเพื่อน และ search function
-      const [triages, setTriages] = useState<any[]>([]); //getTriages
+      const [triages, setTriages] = useState<any[]>([]); 
       const [IPD_Name, setIPD_Name] = useState<any[]>([]);
       const [Disease_Name, setDisease_Name] = useState<any[]>([]);
 
@@ -56,14 +55,10 @@ function MappingBedCreate() {
       // Check save
       const [success, setSuccess] = useState(false);
       const [error, setError] = useState(false);
-
       const [State,setState] = useState(0);
 
       console.log(triages);
       
-      
-      
-
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
       const handleInputChange = (
@@ -78,6 +73,7 @@ function MappingBedCreate() {
       const onChangeTriage = (event: SelectChangeEvent) => {
             setTriageID(event.target.value as string);
       };
+
       const onChangeZone = (event: SelectChangeEvent) => {
             setZoneID(event.target.value as string);
       };
@@ -86,47 +82,43 @@ function MappingBedCreate() {
             setBedID(event.target.value as string);
       };
 
-      
-
-
 //=======================================================================================================================================
 //function Submit
       const handleClose = (
             event?: React.SyntheticEvent | Event,
             reason?: string
       ) => {
-            if (reason === "clickaway") {
-            return;
-            }
-            setSuccess(false);
-            setError(false);
+                  if (reason === "clickaway") {
+                  return;
+                  }
+                  setSuccess(false);
+                  setError(false);
             };
 
       async function submit() {
-            
+            // Data ที่จะนำไปบันทึกลงใน Table Map_Bed
             let data = {
-            Triage_ID: triageID,
-            Bed_ID: bedID,
-            Admidtime: date,
-            MapBed_Comment: comments,
-            //User_ID:
+                  Triage_ID: triageID,
+                  Bed_ID: bedID,
+                  Admidtime: date,
+                  MapBed_Comment: comments,
+                  //User_ID:
             };
-
-           // console.log(data);
-            
+            // Data ที่จะนำไป PATCH เพื่อเปลี่ยนค่า Bed_State เมื่อเตียงนั้นมีการใช้งาน
             let dataUpdateBedState = {
                   id:bedID,
-                  //Bed_Name:Beds.Bed_Name,
                   Bed_State: State,
-                  };
+            };
+            // Data ที่จะนำไป PATCH เพื่อเปลี่ยนค่า Triage_State เมื่อผู้ป่วยถูกแมพกับเตียงแล้ว
             let dataUpdateTriageState = {
                   id:triageID,
-                  //Bed_Name:Beds.Bed_Name,
                   Triage_State: State,
-                  };
-            console.log(dataUpdateBedState);
-            
+            };
 
+            // console.log(dataUpdateBedState);
+            // console.log(dataUpdateTriageState);
+            // console.log(data);
+            
             const apiUrl = "http://localhost:8080/CreateMapBed";
             const requestOptions = {
                   method: "POST",
@@ -164,7 +156,7 @@ function MappingBedCreate() {
                   fetch(apiUrlPatchTriage, requestOptionsPatchTriage)
                         .then((response) => response.json())
                         .then((res) => {});
-                        
+
             // reset All after Submit
             setTriageID("");
             setBedID("");
@@ -177,9 +169,7 @@ function MappingBedCreate() {
             setComments("")
             setGenderType([]);
             setTriages([]);
-            
-            
-      
+            //==================================     
       }
       
 //=======================================================================================================================================
@@ -203,7 +193,6 @@ function MappingBedCreate() {
                   });
       }
       
-     
 //=======================================================================================================================================
 //function fethch data จาก backend
       const getMappigBed = async () => {
@@ -217,7 +206,6 @@ function MappingBedCreate() {
                   .then((res) => {
                         if (res.data) {
                              // setFiltertriages(res.data)
-                              
                         }
                   });
       };
@@ -232,7 +220,6 @@ function MappingBedCreate() {
                   .then((response) => response.json())
                   .then((res) => {
                         if (res.data) {
-                              //setGendersID(res.data.Patient.Gender_ID);
                               setTriages(res.data)
                         }
                   });
@@ -278,7 +265,6 @@ function MappingBedCreate() {
       }, []);
 
       useEffect(() => {
-            //getBedName();
             getBed();
       }, [zoneID]);
 
