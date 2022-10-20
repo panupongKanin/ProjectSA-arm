@@ -9,7 +9,7 @@ import (
 // POST gender
 func CreateIPD(c *gin.Context){
 
-	var ipd entity.Ipd
+	var ipd entity.InpantientDepartment
 	if err := c.ShouldBindJSON(&ipd); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -24,9 +24,9 @@ func CreateIPD(c *gin.Context){
 
 // GET /getipd/:id
 func GetIPD(c *gin.Context) {
-	var GetIPD entity.Ipd
+	var GetIPD entity.InpantientDepartment
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM ipds WHERE id = ?", id).Scan(&GetIPD).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM inpantient_departments WHERE id = ?", id).Scan(&GetIPD).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
@@ -36,8 +36,8 @@ func GetIPD(c *gin.Context) {
 
 // GET /GetListIPDs
 func GetListIPDs(c *gin.Context) {
-	var getipds []entity.Ipd
-	if err := entity.DB().Raw("SELECT * FROM ipds").Scan(&getipds).Error; err != nil {
+	var getipds []entity.InpantientDepartment
+	if err := entity.DB().Raw("SELECT * FROM inpantient_departments").Scan(&getipds).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}

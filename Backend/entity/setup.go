@@ -3,18 +3,15 @@ package entity
 import (
 	"context"
 	"fmt"
-
-
 	"time"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
- 
 var db *gorm.DB
- 
+
 func DB() *gorm.DB {
-           return db
+	return db
 }
 
 type SqlLogger struct {
@@ -25,55 +22,30 @@ func (l SqlLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql st
 	sql, _ := fc()
 	fmt.Printf("%v\n=============================\n", sql)
 }
- 
+
+
 func SetupDatabase() {
-  database, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
+  database, err := gorm.Open(sqlite.Open("sa-65.db"), &gorm.Config{
     Logger: SqlLogger{},
   })
-  if err != nil {
-        panic("failed to connect database")
-  }
- 
-  // Migrate the schema
-  database.AutoMigrate(
+	if err != nil {
+		panic("failed to connect database")
+	}
 
-    //&Bed{},
-
-    &User{},
-    &User_Type{},
-    &Zone{},
+	// Migrate the schema
+	database.AutoMigrate(
     &Map_Bed{},
-
-    
-    &Triage{},
-    &Patient{},
+		&Bed{},
+    &Zone{},
     &Gender{},
+    &Patient{},
+    &DiseaseType{},
     &Disease{},
-    &Disease_Type{},
-    &Ipd{},
-  )
+    &InpantientDepartment{},
+    &Triage{},
+
+	)
+
+
   db = database
- 
-
-
-
- 
-
-  
-
-
- 
-
-  
-  // rows, err := db.Table("zones").Select("zones.zone_name, beds.bed_name").Joins("inner join beds on zones.id = beds.zone_id").Rows()
-	// tests := make([]string,0)
-	// for rows.Next(){
-	// 	var zone_name string
-  //   var bed_name string
-	// 	rows.Scan(&zone_name,&bed_name);
-	//   tests = append(tests,"{" + "\"" + "Zonename" + "\"" + ":" + "\"" + zone_name + "\"" +",","\"" + "Bedname" + "\"" + ":" + "\"" + bed_name + "\"" + "}")
-		
-
-  // }
-  // fmt.Printf("%v\n", tests)
 }

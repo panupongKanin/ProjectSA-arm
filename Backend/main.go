@@ -20,8 +20,7 @@ func main() {
 	//=========== Main Table Mapping Bed ===========
 
 
-	r.POST("/CreateUserType",controller.CreateUser)
-	r.GET("/ListUserTypes",controller.ListUsers)
+
 
 	//===========Zone===========
 	r.POST("/CreateZone",controller.CreateZone)
@@ -30,6 +29,10 @@ func main() {
 	r.POST("/CreateBed",controller.CreateBed)
 	r.GET("/GetListBeds",controller.ListBeds)
 	r.GET("/Bed/:zoneid",controller.GetBed_by_zone)
+	r.GET("/GetBedName/:id",controller.GetBedName)
+
+	r.PATCH("/UpdateBedstate", controller.UpdateBedstate)
+	r.PATCH("/UpdateTriagestate", controller.UpdateTriagestate)
 
 	//===========gender===========
 	r.POST("/CreateGender",controller.CreateGender)
@@ -74,7 +77,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT,PATCH")
      
 		if c.Request.Method == "OPTIONS" {
 		  c.AbortWithStatus(204)

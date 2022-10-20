@@ -8,8 +8,7 @@ import (
 
 // POST DiseaseType
 func CreateDiseaseType (c *gin.Context){
-
-	var diseaseType entity.Disease_Type
+	var diseaseType entity.DiseaseType
 	if err := c.ShouldBindJSON(&diseaseType); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -24,7 +23,7 @@ func CreateDiseaseType (c *gin.Context){
 
 // GET /GetDiseaseType/:id
 func GetDiseaseType(c *gin.Context) {
-	var GetDiseaseType entity.Disease_Type
+	var GetDiseaseType entity.DiseaseType
 	id := c.Param("id")
 	if err := entity.DB().Raw("SELECT * FROM disease_types WHERE id = ?", id).Scan(&GetDiseaseType).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -36,11 +35,10 @@ func GetDiseaseType(c *gin.Context) {
 
 // GET /GetListDiseaseTypes
 func GetListDiseaseTypes(c *gin.Context) {
-	var getListDiseaseTypes []entity.Disease_Type
+	var getListDiseaseTypes []entity.DiseaseType
 	if err := entity.DB().Raw("SELECT * FROM disease_types").Scan(&getListDiseaseTypes).Error; err != nil {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": getListDiseaseTypes})
 }

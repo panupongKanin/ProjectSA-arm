@@ -24,8 +24,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
      
 function MappingBedCreate() {
-
-
 //=======================================================================================================================================
 //รับค่าที่ได้จากการเลือก combobox ทั้งหมดเป็นตารางที่ ดึงไปใส่ตารางหลัก 
 
@@ -59,36 +57,9 @@ function MappingBedCreate() {
       const [success, setSuccess] = useState(false);
       const [error, setError] = useState(false);
 
-      const [filtertriages, setFiltertriages] = useState<any[]>([]);
-      
-      const triage_id = filtertriages.map((id)=>{
-            //console.log(id.Triage_ID);
-            return id.Triage_ID;
-      });
+      const [State,setState] = useState(0);
 
-      //console.log(triages);
-      const [test,settest] = useState([]);
-     
-      // Object.assign({},triage_id)
-      console.log(Object.assign({},triage_id));
-
-      for (let i of triage_id) {
-            //console.log(i.ID);
-            // var result = triage_id.filter(number => number != i.ID);
-            // console.log(result);
-            var result = triages.filter(id => id.ID == i);
-
-            
-
-            //settest(result)
-
-      }
-
-      
-      
-     
-      
-      
+      console.log(triages);
       
       
       
@@ -131,7 +102,7 @@ function MappingBedCreate() {
             setError(false);
             };
 
-      function submit() {
+      async function submit() {
             
             let data = {
             Triage_ID: triageID,
@@ -141,7 +112,20 @@ function MappingBedCreate() {
             //User_ID:
             };
 
-            console.log(data);
+           // console.log(data);
+            
+            let dataUpdateBedState = {
+                  id:bedID,
+                  //Bed_Name:Beds.Bed_Name,
+                  Bed_State: State,
+                  };
+            let dataUpdateTriageState = {
+                  id:triageID,
+                  //Bed_Name:Beds.Bed_Name,
+                  Triage_State: State,
+                  };
+            console.log(dataUpdateBedState);
+            
 
             const apiUrl = "http://localhost:8080/CreateMapBed";
             const requestOptions = {
@@ -154,10 +138,33 @@ function MappingBedCreate() {
                         .then((res) => {
                               if (res.data) {
                                     setSuccess(true);
+                                    setState(1);
+                                    getTriages();
                               } else {
                                     setError(true);
+                                    setState(0);
                               }
                         });
+            
+            const apiUrlPatchBed = "http://localhost:8080/UpdateBedstate";
+            const requestOptionsPatchBed = {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dataUpdateBedState),
+                  };
+                  fetch(apiUrlPatchBed, requestOptionsPatchBed)
+                        .then((response) => response.json())
+                        .then((res) => {});
+            const apiUrlPatchTriage = "http://localhost:8080/UpdateTriagestate";
+            const requestOptionsPatchTriage = {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(dataUpdateTriageState),
+                  };
+                  fetch(apiUrlPatchTriage, requestOptionsPatchTriage)
+                        .then((response) => response.json())
+                        .then((res) => {});
+                        
             // reset All after Submit
             setTriageID("");
             setBedID("");
@@ -168,7 +175,11 @@ function MappingBedCreate() {
             setIPD_Name([]);
             setGenderType([]);
             setComments("")
+            setGenderType([]);
+            setTriages([]);
             
+            
+      
       }
       
 //=======================================================================================================================================
@@ -184,10 +195,10 @@ function MappingBedCreate() {
                   .then((res) => {
                         if (res.data) {
                               //console.log(res.data);
-                              setIPD_Name(res.data.Ipd.IPD_Name);
-                              setDisease_Name(res.data.Disease.Disease_Name)
-                              setDiseaseType(res.data.Disease.Disease_Type.DiseaseType)
-                              setGenderType(res.data.Patient.Gender.Gender_Type)
+                              setIPD_Name(res.data.InpantientDepartment.InpantientDepartment_NAME);
+                              setDisease_Name(res.data.Disease.Disease_NAME)
+                              setDiseaseType(res.data.Disease.DiseaseType.DiseaseType_NAME)
+                              setGenderType(res.data.Patient.Gender.Gender_Name)
                         }
                   });
       }
@@ -205,7 +216,7 @@ function MappingBedCreate() {
                   .then((response) => response.json())
                   .then((res) => {
                         if (res.data) {
-                              setFiltertriages(res.data)
+                             // setFiltertriages(res.data)
                               
                         }
                   });
@@ -253,6 +264,8 @@ function MappingBedCreate() {
                   .then((res) => {
                         if (res.data) {
                               setBeds(res.data);
+                        }else{
+                              setBeds([]);
                         }
                   });
       };
@@ -261,8 +274,12 @@ function MappingBedCreate() {
       useEffect(() => {
             getTriages();
             getZone();
-            getBed();
             getMappigBed();
+      }, []);
+
+      useEffect(() => {
+            //getBedName();
+            getBed();
       }, [zoneID]);
 
 //=======================================================================================================================================
