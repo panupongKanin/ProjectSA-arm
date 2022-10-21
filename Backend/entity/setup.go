@@ -34,18 +34,16 @@ func SetupDatabase() {
 
 	// Migrate the schema
 	database.AutoMigrate(
-    &Map_Bed{},
-		&Bed{},
-    &Zone{},
-    &Gender{},
-    &Patient{},
-    &DiseaseType{},
-    &Disease{},
-    &InpantientDepartment{},
-    &Triage{},
+		&Map_Bed{},
+      	&Bed{},
+    		&Zone{},
+		&Gender{},
+		&Patient{},
+		&DiseaseType{},
+		&Disease{},
+		&InpantientDepartment{},
+		&Triage{},
 
 	)
-
-
   db = database
 }

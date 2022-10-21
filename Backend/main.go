@@ -16,11 +16,7 @@ func main() {
 	r.POST("/CreateMapBed",controller.CreateMapBed)
 	r.GET("/GetListMapBeds",controller.GetListMapBeds)
 	r.GET("/GetMapBed/:id",controller.GetMapBed)
-	r.GET("/GetMapBedTriageID/:id",controller.GetMapBedTriageID)
 	//=========== Main Table Mapping Bed ===========
-
-
-
 
 	//===========Zone===========
 	r.POST("/CreateZone",controller.CreateZone)
@@ -64,11 +60,6 @@ func main() {
 	r.GET("/GetListTriages",controller.GetListTriages)
 	r.GET("/GetTriage/:id",controller.GetTriage)
  
-	
-
-	//===========Test===========
-
-
   	r.Run("localhost:8080")
 }
 

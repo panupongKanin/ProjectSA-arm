@@ -1,5 +1,4 @@
 import internal from "stream";
-
 export interface MappingBedInterface {
       map(arg0: (test: any) => any): unknown;
       ID: number,

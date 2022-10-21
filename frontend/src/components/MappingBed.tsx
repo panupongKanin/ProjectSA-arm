@@ -57,7 +57,7 @@ function MappingBedCreate() {
       const [error, setError] = useState(false);
       const [State,setState] = useState(0);
 
-      console.log(triages);
+      // console.log(triages);
       
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
@@ -500,6 +500,16 @@ function MappingBedCreate() {
                                          
                                     </Grid>
                                     <Grid item xs={4}>
+                                          {/* <Button
+                                                fullWidth
+                                                onClick={submit}
+                                                variant="contained"
+                                                color="primary"
+                                          >
+                                                กลับ
+                                          </Button> */}
+                                    </Grid>
+                                    <Grid item xs={4}>
                                     </Grid>
                                     <Grid item xs={4}>
                                           <Button
@@ -508,14 +518,10 @@ function MappingBedCreate() {
                                                 variant="contained"
                                                 color="primary"
                                           >
-                                                Submit
+                                                บันทึก
                                           </Button>
                                     </Grid>
-                                    <Grid item xs={4}>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                   
-                                    </Grid>
+                                    
                              
                               </Grid>
                         </Paper>

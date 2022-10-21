@@ -76,16 +76,5 @@ func GetListTriages(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": getListTriages})
 }
 
-func UpdateTriagestate(c *gin.Context) {
-	var triage entity.Triage
-	if err := c.ShouldBindJSON(&triage); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if err := entity.DB().Model(triage).Where("id = ?", triage.ID).Update("Triage_State",triage.Triage_State).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"data": triage})
-}
+
 

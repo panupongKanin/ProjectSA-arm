@@ -2,12 +2,8 @@ package controller
 
 import (
 	//"fmt"
-	"fmt"
 	"net/http"
 	//"strings"
-
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/panupongKanin/ProjectSA-arm/entity"
 )
@@ -49,10 +45,10 @@ func 	CreateMapBed(c *gin.Context){
 	// 14: สร้าง Mapbed
 	mb := entity.Map_Bed{
 		Triage_ID: map_bed.Triage_ID,         	// โยงความสัมพันธ์กับ Entity Triage
-		Admidtime: map_bed.Admidtime, // ตั้งค่าฟิลด์ Admidtime
-		Bed_ID:    map_bed.Bed_ID,                 // โยงความสัมพันธ์กับ Entity Bed
+		Admidtime: map_bed.Admidtime, 		// ตั้งค่าฟิลด์ Admidtime
+		Bed_ID:    map_bed.Bed_ID,                // โยงความสัมพันธ์กับ Entity Bed
 		MapBed_Comment: map_bed.MapBed_Comment,
-		//User_ID: map_bed.User_ID,               	// โยงความสัมพันธ์กับ Entity User
+		//User_ID: map_bed.User_ID,               // โยงความสัมพันธ์กับ Entity User
 	}
 
 	// 15: บันทึก
@@ -75,19 +71,17 @@ func GetMapBed(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": GetMapBed})
 }
 
-
-func GetMapBedTriageID(c *gin.Context) {
-	var GetMapBedTriageID []entity.Triage
-	id := c.Param("id")
-	Var:= strings.Split(id,"")
-	str3 := strings.Join(Var, "()")
-	if err := entity.DB().Where("id IN ?", []string{str3}).Find(&GetMapBedTriageID).Error; err != nil {
-		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		 return
+func UpdateTriagestate(c *gin.Context) {
+	var triage entity.Triage
+	if err := c.ShouldBindJSON(&triage); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": GetMapBedTriageID})
-	fmt.Printf("%v\n", []string{str3})
-	
+	if err := entity.DB().Model(triage).Where("id = ?", triage.ID).Update("Triage_State",triage.Triage_State).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": triage})
 }
 
 
@@ -101,6 +95,3 @@ func GetListMapBeds(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"data": GetMapBeds})
 }
-
-
-//GetMapBedTriageID
