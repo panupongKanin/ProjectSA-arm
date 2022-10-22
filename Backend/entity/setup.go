@@ -43,7 +43,28 @@ func SetupDatabase() {
 		&Disease{},
 		&InpantientDepartment{},
 		&Triage{},
+		&User{},
 
 	)
   db = database
+//   // zone 1
+//   db.Model(&Zone{}).Create(&Zone{
+// 	Zone_Name : "หอผู้ป่วยสามัญหญิง",
+//   })
+//   // zone 2
+//   db.Model(&Zone{}).Create(&Zone{
+// 	Zone_Name : "หอผู้ป่วยสามัญชาย",
+//   })
+//   // zone 3
+//   db.Model(&Zone{}).Create(&Zone{
+// 	Zone_Name : "หอผู้ป่วยคลอด",
+//   })
+//    // zone 4
+//    db.Model(&Zone{}).Create(&Zone{
+// 	Zone_Name : "หอผู้ป่วยหลังคลอด",
+//   })
+//   // zone 5
+//   db.Model(&Zone{}).Create(&Zone{
+// 	Zone_Name : "หอผู้ป่วยพิเศษICU",
+//   })
 }

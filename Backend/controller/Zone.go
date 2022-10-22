@@ -46,24 +46,3 @@ func ListZones(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": zones})
 }
-
-// PATCH /zone
-func UpdateZone(c *gin.Context) {
-	var zone entity.Zone
-	if err := c.ShouldBindJSON(&zone); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if tx := entity.DB().Where("id = ?", zone.ID).First(&zone); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "zone not found"})
-		return
-	}
-
-	if err := entity.DB().Save(&zone).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": zone})
-}

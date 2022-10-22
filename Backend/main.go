@@ -59,6 +59,11 @@ func main() {
 	r.POST("/CreateTriage",controller.CreateTriage)
 	r.GET("/GetListTriages",controller.GetListTriages)
 	r.GET("/GetTriage/:id",controller.GetTriage)
+
+
+	r.POST("/signup", controller.CreateUser)
+	// login User Route
+	r.POST("/login", controller.Login)
  
   	r.Run("localhost:8080")
 }

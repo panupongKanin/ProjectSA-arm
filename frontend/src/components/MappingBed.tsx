@@ -9,7 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import TextField from '@mui/material/TextField';
-import { ZoneInterface,BedInterface ,MappingBedInterface} from "../models/UserInterface";
+import { ZoneInterface,BedInterface ,MappingBedInterface} from "../models/MapBedUserInterface";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -57,7 +57,9 @@ function MappingBedCreate() {
       const [error, setError] = useState(false);
       const [State,setState] = useState(0);
 
-      // console.log(triages);
+
+
+      //console.log(Beds);
       
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
@@ -72,6 +74,7 @@ function MappingBedCreate() {
       
       const onChangeTriage = (event: SelectChangeEvent) => {
             setTriageID(event.target.value as string);
+            
       };
 
       const onChangeZone = (event: SelectChangeEvent) => {
@@ -461,9 +464,6 @@ function MappingBedCreate() {
                                                       renderInput={(params) => <TextField {...params} />}
                                                 />
                                                 </LocalizationProvider>
-                                          </FormControl>
-                                          <FormControl fullWidth variant="outlined">
-                                                
                                           </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>

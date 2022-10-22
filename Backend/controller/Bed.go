@@ -8,7 +8,6 @@ import (
 
 // POST Bed
 func CreateBed(c *gin.Context){
-
 	var bed entity.Bed
 	if err := c.ShouldBindJSON(&bed); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -51,7 +50,6 @@ func ListBeds(c *gin.Context) {
 		 c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		 return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"data": beds})
 }
 

@@ -1,9 +1,8 @@
 package controller
 
 import (
-	//"fmt"
+
 	"net/http"
-	//"strings"
 	"github.com/gin-gonic/gin"
 	"github.com/panupongKanin/ProjectSA-arm/entity"
 )
