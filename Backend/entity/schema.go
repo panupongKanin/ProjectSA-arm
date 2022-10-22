@@ -32,8 +32,8 @@ type Map_Bed struct{
 	Bed    		Bed		 `gorm:"references:id"`
 	MapBed_Comment	string
 	// User_ID ทำหน้าที่เป็น FK
-	// User_ID 		*uint
-	// User    		User 		`gorm:"references:id"`
+	User_ID 		*uint
+	User    		User 		`gorm:"references:id"`
 
 }
 

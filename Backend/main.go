@@ -64,6 +64,7 @@ func main() {
 	r.POST("/signup", controller.CreateUser)
 	// login User Route
 	r.POST("/login", controller.Login)
+	r.GET("/user/:id",controller.GetUser)
  
   	r.Run("localhost:8080")
 }

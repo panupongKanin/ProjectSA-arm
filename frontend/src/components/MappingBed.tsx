@@ -33,6 +33,7 @@ function MappingBedCreate() {
       const [bedID,setBedID] = useState('');
       const [date, setDate] = useState<Date | null>(null);
       const [comments,setComments] = useState('');
+      // const [userID,setUserID] = useState('');
      
       // data ที่ได้มาจากการ fethch
       const [MapBeds, setMapbeds] = useState<Partial<MappingBedInterface>>({});
@@ -43,6 +44,10 @@ function MappingBedCreate() {
       const [triages, setTriages] = useState<any[]>([]); 
       const [IPD_Name, setIPD_Name] = useState<any[]>([]);
       const [Disease_Name, setDisease_Name] = useState<any[]>([]);
+
+      const [userName,setUserName] = useState('');
+      console.log(userName);
+      
 
       /*
             ได้ 
@@ -58,8 +63,11 @@ function MappingBedCreate() {
       const [State,setState] = useState(0);
 
 
-
-      //console.log(Beds);
+      
+      const userID = localStorage.getItem("uid")
+      console.log(userID);
+      
+      //console.log(user);
       
 //=======================================================================================================================================
 //สร้างฟังก์ชันสำหรับ คอยรับการกระทำ เมื่อคลิ๊ก หรือ เลือก
@@ -105,7 +113,7 @@ function MappingBedCreate() {
                   Bed_ID: bedID,
                   Admidtime: date,
                   MapBed_Comment: comments,
-                  //User_ID:
+                  User_ID:userID,
             };
             // Data ที่จะนำไป PATCH เพื่อเปลี่ยนค่า Bed_State เมื่อเตียงนั้นมีการใช้งาน
             let dataUpdateBedState = {
@@ -260,11 +268,29 @@ function MappingBedCreate() {
                   });
       };
 
+      const getUser = async () => {
+            const apiUrl = `http://localhost:8080/user/${userID}`;
+            const requestOptions = {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            };
+            fetch(apiUrl, requestOptions)
+                  .then((response) => response.json())
+                  .then((res) => {
+                        if (res.data) {
+                              setUserName(res.data.Name);
+                        }else{
+                              setBeds([]);
+                        }
+                  });
+      };
+
       //========function useEffect ========
       useEffect(() => {
             getTriages();
             getZone();
             getMappigBed();
+            getUser();
       }, []);
 
       useEffect(() => {
@@ -483,20 +509,15 @@ function MappingBedCreate() {
                                     </Grid>
                                     <Grid item xs={12}>
                                           <p>ผู้บันทึก</p>
-                                          <FormControl fullWidth>
-                                                <Select
-                                                id="demo-select-small"
-                                                value={zoneID}
-                                                displayEmpty
-                                                inputProps={{ 'aria-label': 'Without label' }}
-                                                onChange={onChangeZone}
-                                                >
-                                                      <MenuItem value="">
-                                                            -
-                                                      </MenuItem>
-                                                      
-                                                </Select>
-                                          </FormControl>
+                                          <TextField
+                                                fullWidth
+                                                id="outlined-read-only-input"
+                                                value={userName}
+                                                InputProps={{
+                                                      readOnly: true,
+                                                
+                                                }}
+                                          />
                                          
                                     </Grid>
                                     <Grid item xs={4}>
